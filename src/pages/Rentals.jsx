@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
 function RentalForm({ onSave, onCancel }) {
-  const [form, setForm] = useState({ customerId: '', vehicleId: '', startDate: '', expectedReturn: '', weeklyRate: '', deposit: 0, notes: '' });
+  const [form, setForm] = useState({ customerId: '', vehicleId: '', startDate: '', expectedReturn: '', weeklyRate: '', deposit: 0, notes: '', paymentDay: '' });
   const [customers, setCustomers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -52,6 +52,12 @@ function RentalForm({ onSave, onCancel }) {
         <div><label className="label">Expected Return <span className="text-white/20 normal-case">(optional)</span></label><input className="input" type="date" value={form.expectedReturn} onChange={e => set('expectedReturn', e.target.value)} /></div>
         <div><label className="label">Weekly Rate ($) *</label><input className="input" type="number" value={form.weeklyRate} onChange={e => set('weeklyRate', e.target.value)} required /></div>
         <div><label className="label">Deposit ($)</label><input className="input" type="number" value={form.deposit} onChange={e => set('deposit', e.target.value)} /></div>
+        <div><label className="label">Payment Day</label>
+          <select className="input" value={form.paymentDay} onChange={e => set('paymentDay', e.target.value)}>
+            <option value="">Not set</option>
+            {['monday','tuesday','wednesday','thursday','friday','saturday','sunday'].map(d => <option key={d} value={d}>{d.charAt(0).toUpperCase()+d.slice(1)}</option>)}
+          </select>
+        </div>
       </div>
       <div><label className="label">Notes</label><textarea className="input resize-none" rows={2} value={form.notes} onChange={e => set('notes', e.target.value)} /></div>
       <div className="flex gap-2 justify-end">

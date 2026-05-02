@@ -13,6 +13,7 @@ import RentalDetail from './pages/RentalDetail';
 import Payments from './pages/Payments';
 import Maintenance from './pages/Maintenance';
 import Reports from './pages/Reports';
+import WeeklyPayments from './pages/WeeklyPayments';
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="payments" element={<Payments />} />
             <Route path="maintenance" element={<Maintenance />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="weekly" element={<WeeklyPayments />} />
           </Route>
         </Routes>
       </BrowserRouter>

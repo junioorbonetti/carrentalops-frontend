@@ -12,6 +12,7 @@ const nav = [
   { to: '/customers', icon: Users, label: 'Customers' },
   { to: '/rentals', icon: FileText, label: 'Rentals' },
   { to: '/payments', icon: CreditCard, label: 'Payments' },
+  { to: '/weekly', icon: CreditCard, label: 'Weekly' },
   { to: '/maintenance', icon: Wrench, label: 'Maintenance' },
   { to: '/reports', icon: BarChart2, label: 'Reports' },
 ];

@@ -68,6 +68,7 @@ function RentalEditForm({ rental, onSave, onCancel }) {
     deposit: rental.deposit,
     status: rental.status,
     notes: rental.notes || '',
+    paymentDay: rental.paymentDay || '',
   });
   const [loading, setLoading] = useState(false);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -97,6 +98,12 @@ function RentalEditForm({ rental, onSave, onCancel }) {
         <div><label className="label">Status</label>
           <select className="input" value={form.status} onChange={e => set('status', e.target.value)}>
             {['active', 'finished', 'late', 'cancelled'].map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+        <div><label className="label">Payment Day</label>
+          <select className="input" value={form.paymentDay} onChange={e => set('paymentDay', e.target.value)}>
+            <option value="">Not set</option>
+            {['monday','tuesday','wednesday','thursday','friday','saturday','sunday'].map(d => <option key={d} value={d}>{d.charAt(0).toUpperCase()+d.slice(1)}</option>)}
           </select>
         </div>
       </div>
