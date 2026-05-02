@@ -1,11 +1,69 @@
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, eachWeekOfInterval } from 'date-fns';
 import api from '../services/api';
 
-function ReportSummary({ data, loading }) {
+function buildChartData(payments, tab, customStart, customEnd) {
+  if (!payments || payments.length === 0) return [];
+
+  if (tab === 'weekly') {
+    // Group by day of week
+    const grouped = {};
+    payments.forEach(p => {
+      const key = format(new Date(p.paidAt), 'EEE dd/MM');
+      if (!grouped[key]) grouped[key] = 0;
+      grouped[key] += p.status === 'paid' ? p.amount : 0;
+    });
+    return Object.entries(grouped).map(([day, revenue]) => ({ day, revenue }));
+  }
+
+  if (tab === 'monthly') {
+    // Group by day of month
+    const grouped = {};
+    payments.forEach(p => {
+      const key = format(new Date(p.paidAt), 'dd');
+      if (!grouped[key]) grouped[key] = 0;
+      grouped[key] += p.status === 'paid' ? p.amount : 0;
+    });
+    return Object.entries(grouped).sort(([a], [b]) => Number(a) - Number(b)).map(([day, revenue]) => ({ day, revenue }));
+  }
+
+  if (tab === 'custom') {
+    const start = new Date(customStart);
+    const end = new Date(customEnd);
+    const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 31) {
+      // Group by day
+      const grouped = {};
+      payments.forEach(p => {
+        const key = format(new Date(p.paidAt), 'dd/MM');
+        if (!grouped[key]) grouped[key] = 0;
+        grouped[key] += p.status === 'paid' ? p.amount : 0;
+      });
+      return Object.entries(grouped).map(([day, revenue]) => ({ day, revenue }));
+    } else {
+      // Group by week
+      const grouped = {};
+      payments.forEach(p => {
+        const key = `W${format(new Date(p.paidAt), 'ww/MM')}`;
+        if (!grouped[key]) grouped[key] = 0;
+        grouped[key] += p.status === 'paid' ? p.amount : 0;
+      });
+      return Object.entries(grouped).map(([day, revenue]) => ({ day, revenue }));
+    }
+  }
+
+  return [];
+}
+
+function ReportSummary({ data, loading, tab, customStart, customEnd }) {
   if (loading) return <p className="text-sm text-white/30 text-center py-4">Loading...</p>;
   if (!data) return null;
+
+  const chartData = buildChartData(data.payments, tab, customStart, customEnd);
+  const tooltipStyle = { backgroundColor: '#1a2d42', border: '1px solid rgba(255,255,255,0.1)', color: '#e8edf2', fontSize: 12 };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -21,6 +79,19 @@ function ReportSummary({ data, loading }) {
           </div>
         ))}
       </div>
+
+      {chartData.length > 0 && (
+        <ResponsiveContainer width="100%" height={160}>
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+            <XAxis dataKey="day" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }} />
+            <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }} />
+            <Tooltip contentStyle={tooltipStyle} formatter={v => [`$${Number(v).toFixed(2)}`, 'Revenue']} />
+            <Bar dataKey="revenue" fill="#4db8d4" radius={[3, 3, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+
       {data.payments?.length > 0 ? (
         <div>
           <p className="text-xs text-white/40 uppercase tracking-wide mb-2">Payments</p>
@@ -62,7 +133,9 @@ export default function Reports() {
     api.get('/reports/pending-customers').then(r => setPendingCustomers(r.data));
   }, []);
 
-  useEffect(() => { loadReport(); }, [tab, selectedYear, selectedMonth]);
+  useEffect(() => {
+    if (tab !== 'custom') loadReport();
+  }, [tab, selectedYear, selectedMonth]);
 
   const loadReport = () => {
     setLoading(true);
@@ -88,7 +161,6 @@ export default function Reports() {
     <div className="space-y-6">
       <h1 className="text-lg font-semibold">Reports</h1>
 
-      {/* Period Report */}
       <div className="card">
         <div className="flex items-center gap-2 mb-4 flex-wrap">
           {['weekly', 'monthly', 'custom'].map(t => (
@@ -109,7 +181,7 @@ export default function Reports() {
           )}
 
           {tab === 'custom' && (
-            <div className="flex gap-2 ml-auto items-center">
+            <div className="flex gap-2 ml-auto items-center flex-wrap">
               <input className="input text-xs w-36" type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} />
               <span className="text-white/30 text-xs">to</span>
               <input className="input text-xs w-36" type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} />
@@ -118,10 +190,9 @@ export default function Reports() {
           )}
         </div>
 
-        <ReportSummary data={reportData} loading={loading} />
+        <ReportSummary data={reportData} loading={loading} tab={tab} customStart={customStart} customEnd={customEnd} />
       </div>
 
-      {/* Revenue by Month chart */}
       <div className="card">
         <h2 className="text-sm font-medium mb-4">Revenue by Month (All Time)</h2>
         {revenueByMonth.length > 0 ? (
@@ -137,7 +208,6 @@ export default function Reports() {
         ) : <p className="text-sm text-white/30 text-center py-6">No data yet</p>}
       </div>
 
-      {/* Revenue vs Costs by Vehicle */}
       <div className="card">
         <h2 className="text-sm font-medium mb-4">Revenue vs Costs by Vehicle</h2>
         {revenueByVehicle.length > 0 ? (
@@ -155,7 +225,6 @@ export default function Reports() {
         ) : <p className="text-sm text-white/30 text-center py-6">No data yet</p>}
       </div>
 
-      {/* Pending customers */}
       <div className="card">
         <h2 className="text-sm font-medium mb-3">Customers with Pending Balance</h2>
         {pendingCustomers.length > 0 ? (
