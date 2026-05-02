@@ -42,6 +42,12 @@ export default function Dashboard() {
               {data.lateRentals} overdue rental{data.lateRentals > 1 ? 's' : ''} — needs attention
             </Link>
           )}
+          {data.expiringDocs?.length > 0 && (
+            <Link to="/vehicles" className="flex items-center gap-3 bg-orange-500/10 border border-orange-500/20 rounded-lg px-4 py-3 text-sm text-orange-400 hover:bg-orange-500/15 transition-colors block">
+              <AlertTriangle size={15} />
+              {data.expiringDocs.length} vehicle doc{data.expiringDocs.length > 1 ? 's' : ''} expiring this month: {data.expiringDocs.map(v => v.plate).join(', ')}
+            </Link>
+          )}
           {data.overdueMaintenance > 0 && (
             <Link to="/maintenance" className="flex items-center gap-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-4 py-3 text-sm text-yellow-400 hover:bg-yellow-500/15 transition-colors">
               <Wrench size={15} />

@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 const STATUS_LABELS = { available: 'Available', rented: 'Rented', maintenance: 'Maintenance', inactive: 'Inactive' };
 
 function VehicleForm({ initial, onSave, onCancel }) {
-  const [form, setForm] = useState(initial || { brand: '', model: '', year: new Date().getFullYear(), plate: '', vin: '', color: '', mileage: 0, weeklyRate: '', notes: '', status: 'available' });
+  const [form, setForm] = useState(initial || { brand: '', model: '', year: new Date().getFullYear(), plate: '', vin: '', color: '', mileage: 0, weeklyRate: '', notes: '', status: 'available', docExpiry: '' });
   const [loading, setLoading] = useState(false);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -35,6 +35,7 @@ function VehicleForm({ initial, onSave, onCancel }) {
         <div><label className="label">VIN</label><input className="input" value={form.vin} onChange={e => set('vin', e.target.value)} /></div>
         <div><label className="label">Mileage</label><input className="input" type="number" value={form.mileage} onChange={e => set('mileage', e.target.value)} /></div>
         <div><label className="label">Weekly Rate ($)</label><input className="input" type="number" value={form.weeklyRate} onChange={e => set('weeklyRate', e.target.value)} /></div>
+        <div><label className="label">Doc Expiry Date</label><input className="input" type="date" value={form.docExpiry?.slice(0,10) || ''} onChange={e => set('docExpiry', e.target.value)} /></div>
         {initial && <div><label className="label">Status</label>
           <select className="input" value={form.status} onChange={e => set('status', e.target.value)}>
             {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
