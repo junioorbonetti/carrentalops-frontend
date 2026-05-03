@@ -7,7 +7,6 @@ import {
 import { useState } from 'react';
 import { Wifi, Map } from 'lucide-react';
 
-// No array nav:
 { to: '/trackers', icon: Wifi, label: 'Trackers' },
 { to: '/fleet', icon: Map, label: 'Fleet Map' },
 
