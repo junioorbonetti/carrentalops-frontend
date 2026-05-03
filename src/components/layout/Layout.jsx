@@ -2,7 +2,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Car, Users, FileText, CreditCard,
-  Wrench, BarChart2, LogOut, Menu, X, Wifi, Map
+  Wrench, BarChart2, LogOut, Menu, X, Wifi, Map, Inbox
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -17,6 +17,7 @@ const nav = [
   { to: '/reports', icon: BarChart2, label: 'Reports' },
   { to: '/trackers', icon: Wifi, label: 'Trackers' },
   { to: '/fleet', icon: Map, label: 'Fleet Map' },
+  { to: '/leads', icon: Inbox, label: 'Leads' },
 ];
 
 export default function Layout() {

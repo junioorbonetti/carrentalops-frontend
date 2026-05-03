@@ -16,6 +16,8 @@ import Reports from './pages/Reports';
 import WeeklyPayments from './pages/WeeklyPayments';
 import Trackers from './pages/Trackers';
 import FleetMap from './pages/FleetMap';
+import Catalog from './pages/Catalog';
+import Leads from './pages/Leads';
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -34,6 +36,7 @@ export default function App() {
         />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/catalog" element={<Catalog />} />
           <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
             <Route index element={<Dashboard />} />
             <Route path="vehicles" element={<Vehicles />} />
@@ -48,6 +51,7 @@ export default function App() {
             <Route path="weekly" element={<WeeklyPayments />} />
             <Route path="trackers" element={<Trackers />} />
             <Route path="fleet" element={<FleetMap />} />
+            <Route path="leads" element={<Leads />} />
           </Route>
         </Routes>
       </BrowserRouter>
