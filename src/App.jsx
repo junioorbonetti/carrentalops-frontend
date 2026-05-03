@@ -14,6 +14,8 @@ import Payments from './pages/Payments';
 import Maintenance from './pages/Maintenance';
 import Reports from './pages/Reports';
 import WeeklyPayments from './pages/WeeklyPayments';
+import Trackers from './pages/Trackers';
+import FleetMap from './pages/FleetMap';
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -44,6 +46,8 @@ export default function App() {
             <Route path="maintenance" element={<Maintenance />} />
             <Route path="reports" element={<Reports />} />
             <Route path="weekly" element={<WeeklyPayments />} />
+            <Route path="trackers" element={<Trackers />} />
+            <Route path="fleet" element={<FleetMap />} />
           </Route>
         </Routes>
       </BrowserRouter>
