@@ -2,13 +2,9 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Car, Users, FileText, CreditCard,
-  Wrench, BarChart2, LogOut, Menu, X
+  Wrench, BarChart2, LogOut, Menu, X, Wifi, Map
 } from 'lucide-react';
 import { useState } from 'react';
-import { Wifi, Map } from 'lucide-react';
-
-{ to: '/trackers', icon: Wifi, label: 'Trackers' },
-{ to: '/fleet', icon: Map, label: 'Fleet Map' },
 
 const nav = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -19,6 +15,8 @@ const nav = [
   { to: '/weekly', icon: CreditCard, label: 'Weekly' },
   { to: '/maintenance', icon: Wrench, label: 'Maintenance' },
   { to: '/reports', icon: BarChart2, label: 'Reports' },
+  { to: '/trackers', icon: Wifi, label: 'Trackers' },
+  { to: '/fleet', icon: Map, label: 'Fleet Map' },
 ];
 
 export default function Layout() {
@@ -86,12 +84,10 @@ export default function Layout() {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Desktop sidebar */}
       <aside className="hidden md:flex w-56 bg-black/20 border-r border-white/10 flex-col flex-shrink-0">
         <Sidebar />
       </aside>
 
-      {/* Mobile sidebar */}
       {open && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div className="w-56 bg-[#0d1b2a] border-r border-white/10 flex flex-col">
@@ -102,7 +98,6 @@ export default function Layout() {
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile topbar */}
         <div className="md:hidden flex items-center px-4 py-3 border-b border-white/10 bg-black/20">
           <button onClick={() => setOpen(true)} className="text-white/50 mr-3">
             <Menu size={20} />
