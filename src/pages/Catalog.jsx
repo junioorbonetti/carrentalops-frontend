@@ -22,8 +22,6 @@ const TRANSLATIONS = {
     phonePlaceholder: '(555) 000-0000',
     dl: "Driver's License Number",
     dlPlaceholder: 'DL123456789',
-    dlPhone: 'DL Phone',
-    dlPhonePlaceholder: 'Phone on file with DL',
     hasWhatsapp: 'Does your phone have WhatsApp?',
     whatsappNumber: 'WhatsApp Number',
     submit: 'Send Request',
@@ -54,8 +52,6 @@ const TRANSLATIONS = {
     phonePlaceholder: '(555) 000-0000',
     dl: 'Número de Licencia',
     dlPlaceholder: 'DL123456789',
-    dlPhone: 'Teléfono de la Licencia',
-    dlPhonePlaceholder: 'Teléfono registrado en la licencia',
     hasWhatsapp: '¿Tu teléfono tiene WhatsApp?',
     whatsappNumber: 'Número de WhatsApp',
     submit: 'Enviar Solicitud',
@@ -86,8 +82,6 @@ const TRANSLATIONS = {
     phonePlaceholder: '(555) 000-0000',
     dl: 'Número da Driver License',
     dlPlaceholder: 'DL123456789',
-    dlPhone: 'Telefone da DL',
-    dlPhonePlaceholder: 'Telefone registrado na DL',
     hasWhatsapp: 'Seu telefone tem WhatsApp?',
     whatsappNumber: 'Número do WhatsApp',
     submit: 'Enviar Solicitação',
@@ -132,7 +126,7 @@ export default function Catalog() {
 
   const [form, setForm] = useState({
     fullName: '', email: '', phone: '', licenseNumber: '',
-    dlPhone: '', hasWhatsapp: false, whatsappNumber: '',
+    hasWhatsapp: false, whatsappNumber: '',
   });
 
   useEffect(() => {
@@ -146,7 +140,7 @@ export default function Catalog() {
     setSelected(vehicle);
     setSubmitted(false);
     setError('');
-    setForm({ fullName: '', email: '', phone: '', licenseNumber: '', dlPhone: '', hasWhatsapp: false, whatsappNumber: '' });
+    setForm({ fullName: '', email: '', phone: '', licenseNumber: '', hasWhatsapp: false, whatsappNumber: '' });
   }
 
   function closeModal() { setSelected(null); }
@@ -167,8 +161,6 @@ export default function Catalog() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white flex flex-col">
-
-      {/* HEADER */}
       <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -178,17 +170,13 @@ export default function Catalog() {
               <p className="text-gray-500 text-xs">{t.tagline}</p>
             </div>
           </div>
-
-          {/* Language switcher */}
           <div className="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
             {['en', 'es', 'pt'].map(l => (
               <button
                 key={l}
                 onClick={() => setLang(l)}
                 className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
-                  lang === l
-                    ? 'bg-cyan-500 text-gray-950'
-                    : 'text-gray-400 hover:text-white'
+                  lang === l ? 'bg-cyan-500 text-gray-950' : 'text-gray-400 hover:text-white'
                 }`}
               >
                 {l === 'en' ? '🇺🇸 EN' : l === 'es' ? '🇪🇸 ES' : '🇧🇷 PT'}
@@ -198,18 +186,15 @@ export default function Catalog() {
         </div>
       </header>
 
-      {/* HERO */}
       <div className="bg-gradient-to-b from-gray-900 to-gray-950 border-b border-gray-800 px-6 py-12 text-center">
         <h1 className="text-3xl font-bold text-white mb-2">{t.available}</h1>
         <p className="text-gray-400 max-w-lg mx-auto">{t.subtitle}</p>
       </div>
 
-      {/* GRID */}
       <div className="flex-1 max-w-6xl mx-auto w-full px-6 py-10">
         {loading && <p className="text-gray-400 text-center py-20">{t.loading}</p>}
         {!loading && vehicles.length === 0 && <p className="text-gray-500 text-center py-20">{t.noVehicles}</p>}
         {error && <p className="text-red-400 text-center py-20">{error}</p>}
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {vehicles.map(v => (
             <div key={v.id} className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-cyan-500/30 hover:shadow-lg hover:shadow-cyan-500/5 transition-all group">
@@ -235,10 +220,7 @@ export default function Catalog() {
                     <span className="text-cyan-400 font-bold text-xl">${v.weeklyRate.toFixed(2)}</span>
                     <span className="text-gray-500 text-sm">{t.perWeek}</span>
                   </div>
-                  <button
-                    onClick={() => openModal(v)}
-                    className="bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-semibold text-sm px-4 py-2 rounded-xl transition-colors"
-                  >
+                  <button onClick={() => openModal(v)} className="bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-semibold text-sm px-4 py-2 rounded-xl transition-colors">
                     {t.rent}
                   </button>
                 </div>
@@ -248,7 +230,6 @@ export default function Catalog() {
         </div>
       </div>
 
-      {/* FOOTER */}
       <footer className="border-t border-gray-800 bg-gray-900 px-6 py-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -259,14 +240,12 @@ export default function Catalog() {
         </div>
       </footer>
 
-      {/* MODAL */}
       {selected && (
         <div
           className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
           onClick={e => e.target === e.currentTarget && closeModal()}
         >
           <div className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            {/* Modal header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
               <div className="flex items-center gap-2">
                 <Logo />
@@ -274,7 +253,6 @@ export default function Catalog() {
               </div>
               <button onClick={closeModal} className="text-gray-500 hover:text-white text-2xl leading-none">×</button>
             </div>
-
             <div className="p-6">
               {submitted ? (
                 <div className="text-center py-8">
@@ -294,7 +272,6 @@ export default function Catalog() {
                     <h2 className="text-lg font-bold">{t.modalTitle}</h2>
                     <p className="text-gray-400 text-sm">{selected.brand} {selected.model} {selected.year} · <span className="text-cyan-400">${selected.weeklyRate.toFixed(2)}{t.perWeek}</span></p>
                   </div>
-
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                       <label className="block text-xs text-gray-400 mb-1">{t.name} <span className="text-red-400">*</span></label>
@@ -319,12 +296,6 @@ export default function Catalog() {
                       <input required value={form.licenseNumber} onChange={e => setForm(f => ({ ...f, licenseNumber: e.target.value }))}
                         className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 transition-colors"
                         placeholder={t.dlPlaceholder} />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-400 mb-1">{t.dlPhone} <span className="text-gray-600">{t.optional}</span></label>
-                      <input value={form.dlPhone} onChange={e => setForm(f => ({ ...f, dlPhone: e.target.value }))}
-                        className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 transition-colors"
-                        placeholder={t.dlPhonePlaceholder} />
                     </div>
                     <div className="bg-gray-800 border border-gray-700 rounded-xl px-4 py-3">
                       <label className="flex items-center gap-3 cursor-pointer">
